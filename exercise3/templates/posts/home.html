@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>Your Picture Upload</h1>
+<ul>
+    <div>
+        <a class="btn btn-primary" href="{% url 'CreatePostView' %}"><span>Upload New</span></a>
+        <form class="form-inline my-2 my-lg-1" action="">
+            <input
+            type="search"
+            placeholder="search"
+            aria-label="search"
+            name="search"
+            value="{{search_term}}"
+            id="">
+            <button class="btn btn-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+        {% for post in posts %}
+            <p>Description: {{ post.text|linebreaksbr }}</p>
+            <img class="img-thumbnail" style="width: 40%; height: 40%; object-fit: contain; "src="{{ post.cover.url}}" alt="{{ post.title }}">
+            <a class="btn btn-success" href="{% url 'EditPostView' pk=post.pk %}">Edit</a>
+            <a class="btn btn-danger" href="{% url 'DeletePostView' pk=post.pk %}">Delete</a>
+            <hr>
+        {% endfor %}
+    </div>
+</ul>
+{% endblock %}

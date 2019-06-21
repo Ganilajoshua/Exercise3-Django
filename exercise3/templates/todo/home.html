@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>To Do List</h1>
+<ul>
+    <div>
+        <form class="form-inline my-2 my-lg-1" action="">
+            <input
+            type="search"
+            placeholder="search"
+            aria-label="search"
+            name="search"
+            value="{{search_term}}"
+            id="">
+            <button class="btn btn-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+        {% for o in todo %}
+            {% if o.checkbox%}
+            <form method="POST" id="checkboxchecked">
+                <tbody>
+                    <tr>
+                        <td><a href="{% url 'FinishToDoView' pk=o.pk %}">Done</a></td>
+                        <td>{{o.title}}</td>
+                        <td> | <a href="{% url 'EditToDoView' pk=o.pk %}">Edit</a></td>
+                        <td> | <a href="{% url 'DeleteToDoView' pk=o.pk %}">Delete</a></td>
+                    </tr>
+                </tbody>
+            </form>
+            {% endif %}
+            {% endfor %}
+            <form method = "post"> 
+                {% csrf_token %} 
+                {{ form.as_p }} 
+                <button type="submit">add</button> 
+            </form>
+            <br><br>
+        </div>
+    </ul>
+        <ul>
+            
+        <div>
+            <h1>Done</h1>
+            {% for o in todo %}
+                {% if o.checkbox == False %}
+                <form method="POST" action="/report/{{o.sample}}">
+                    <tbody>
+                        <tr>
+                            <td><input type="checkbox" name=""  value="{{o.checkbox}}" disabled></td>
+                            <td>{{o.title}}</td>
+                            <td> | <a href="{% url 'EditToDoView' pk=o.pk %}">Edit</a></td>
+                            <td> | <a href="{% url 'DeleteToDoView' pk=o.pk %}">Delete</a></td>
+                        </tr>
+                    </tbody>
+                </form>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </ul>
+    <script>
+        $(function(){
+            $('.id_box').change(function(){
+                $('#checkboxchecked').submit();
+            });
+        });
+    </script>
+{% endblock %}

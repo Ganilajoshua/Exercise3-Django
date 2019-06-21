@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>Journal</h1>
+<ul>
+    <div>
+        <form method = "post"> 
+            {% csrf_token %} 
+            {{ form.as_p }} 
+            <button type="submit">Upload</button> 
+        </form>
+        <br><br>
+        <form class="form-inline my-2 my-lg-1" action="">
+            <input
+            type="search"
+            placeholder="search"
+            aria-label="search"
+            name="search"
+            value="{{search_term}}"
+            id="">
+            <button class="btn btn-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+        {% for jour in journal %}
+            <h2>Title: {{ jour.title|linebreaksbr }}</h2>
+            <p>Text: {{ jour.text|linebreaksbr }}</p>
+            <a class="btn btn-success" href="{% url 'EditJournalView' pk=jour.pk %}">Edit</a>
+            <a class="btn btn-danger" href="{% url 'DeleteJournalView' pk=jour.pk %}">Delete</a>
+            <hr>
+        {% endfor %}
+    </div>
+</ul>
+{% endblock %}
