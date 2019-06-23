@@ -4,6 +4,7 @@ from .views import PostPicture
 from . import views
 urlpatterns = [
     # path('post/', PostPicture.as_view(), name='PostPicture'),
+    path('signup/', views.SignUp.as_view(), name='signup'),
     path('post/', views.PostPicture, name='PostPicture'),
     path('post/new', views.CreatePostView, name='CreatePostView'),
     path('post/<int:pk>/edit/', views.EditPostView, name='EditPostView'),
@@ -18,4 +19,5 @@ urlpatterns = [
     path('todolist/<pk>/remove/', views.DeleteToDoView, name='DeleteToDoView'),
     path('todolist/<pk>/check/', views.FinishToDoView, name='FinishToDoView'),
     
+    path('', views.MainHome, name='home') #main home
 ]

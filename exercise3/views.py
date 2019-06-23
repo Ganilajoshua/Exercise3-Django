@@ -5,10 +5,10 @@ from django.shortcuts import redirect
 from django.http import HttpResponse 
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
-
+from django.views import generic
 from .models import Post,Journal,ToDoList
 from .forms import PostForm,JournalForm,TodoForm
-
+from django.contrib.auth.forms import UserCreationForm
 # class PostPicture(ListView):
 #     model = Post
 #     template_name = 'posts/home.html'
@@ -23,11 +23,12 @@ from .forms import PostForm,JournalForm,TodoForm
 @login_required(login_url='/login/')
 def PostPicture(request):
     search_term =''
+    posts = Post.objects.filter(author = request.user.id)
     if 'search' in request.GET:
         search_term = request.GET['search']
-        posts = Post.objects.filter(text__icontains=search_term,title__icontains=search_term)
+        posts = Post.objects.filter(title__contains=str(search_term), author = request.user.id)
     else:
-        posts = Post.objects.all()
+        posts = Post.objects.filter(author = request.user.id)
     return render(request, 'posts/home.html', {'posts':posts})
 
 # Picture Upload
@@ -81,11 +82,13 @@ def JournalView(request):
         search_term =''
         journal = Journal.objects.order_by('created_date')
         search_term =''
+        print(search_term)
+        journal = Journal.objects.filter(author = request.user.id)
         if 'search' in request.GET:
             search_term = request.GET['search']
-            journal = Journal.objects.filter(text__icontains=search_term, title__icontains=search_term)
+            journal = Journal.objects.filter(title__contains=str(search_term), author = request.user.id)
         else:
-            journal = Journal.objects.all()
+            journal = Journal.objects.filter(author = request.user.id)
         return render(request, 'journal/home.html', {'form' : form,'journal':journal}) 
 
 @login_required(login_url='/login/')
@@ -123,10 +126,12 @@ def ToDoView(request):
     else: 
         form = TodoForm()
         search_term =''
-        todo = ToDoList.objects.order_by('created_date')
+        todo = ToDoList.objects.order_by('created_date').filter(author = request.user.id)
         if 'search' in request.GET:
             search_term = request.GET['search']
-            todo = ToDoList.objects.filter(title=search_term)
+            todo = ToDoList.objects.filter(title__contains=str(search_term), author = request.user.id)
+        else:
+            todo = ToDoList.objects.filter(author = request.user.id).order_by('created_date')
         return render(request, 'todo/home.html', {'form' : form,'todo':todo}) 
 
 @login_required(login_url='/login/')
@@ -159,4 +164,12 @@ def DeleteToDoView(request, pk):
     todo = get_object_or_404(ToDoList, pk=pk)
     todo.delete()
     return redirect('/todolist')
-    
+
+
+class SignUp(generic.CreateView):
+    form_class = UserCreationForm
+    success_url = reverse_lazy('login')
+    template_name = 'registration/signup.html'
+
+def MainHome(request):
+    return render(request, 'home.html', {})
