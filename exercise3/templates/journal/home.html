@@ -23,6 +23,9 @@
         </form>
         {% for jour in journal %}
             <h2>Title: {{ jour.title|linebreaksbr }}</h2>
+            {% if user.is_superuser %}
+                <p>author: {{ jour.author|linebreaksbr }}</p>
+            {% endif %}
             <p>{{ jour.text|linebreaksbr }}</p>
             <a class="btn btn-success" href="{% url 'EditJournalView' pk=jour.pk %}">Edit</a>
             <a class="btn btn-danger" href="{% url 'DeleteJournalView' pk=jour.pk %}">Delete</a>

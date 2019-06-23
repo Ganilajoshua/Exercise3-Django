@@ -27,6 +27,8 @@ def PostPicture(request):
     if 'search' in request.GET:
         search_term = request.GET['search']
         posts = Post.objects.filter(title__contains=str(search_term), author = request.user.id)
+    elif request.user.is_superuser:
+        posts = Post.objects.all()
     else:
         posts = Post.objects.filter(author = request.user.id)
     return render(request, 'posts/home.html', {'posts':posts})
@@ -87,6 +89,8 @@ def JournalView(request):
         if 'search' in request.GET:
             search_term = request.GET['search']
             journal = Journal.objects.filter(title__contains=str(search_term), author = request.user.id)
+        elif request.user.is_superuser:
+            journal = Journal.objects.all()
         else:
             journal = Journal.objects.filter(author = request.user.id)
         return render(request, 'journal/home.html', {'form' : form,'journal':journal}) 
@@ -130,6 +134,8 @@ def ToDoView(request):
         if 'search' in request.GET:
             search_term = request.GET['search']
             todo = ToDoList.objects.filter(title__contains=str(search_term), author = request.user.id)
+        elif request.user.is_superuser:
+            todo = ToDoList.objects.all()
         else:
             todo = ToDoList.objects.filter(author = request.user.id).order_by('created_date')
         return render(request, 'todo/home.html', {'form' : form,'todo':todo}) 

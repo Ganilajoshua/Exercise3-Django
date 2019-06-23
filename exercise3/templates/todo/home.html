@@ -7,7 +7,7 @@
         <form class="form-inline my-2 my-lg-1" action="">
             <input
             type="search"
-            placeholder="search"
+            placeholder="Search Title"
             aria-label="search"
             name="search"
             value="{{search_term}}"
@@ -25,9 +25,12 @@
                 <ul>
                     <li>
                     {{o.title}}
-                      <a class="btn btn-success my-2 my-sm-0" href="{% url 'FinishToDoView' pk=o.pk %}">Complete</a>
-                      <a class="btn btn-secondary my-2 my-sm-0" href="{% url 'EditToDoView' pk=o.pk %}">Edit</a>
-                      <a class="btn btn-danger my-2 my-sm-0" href="{% url 'DeleteToDoView' pk=o.pk %}">Delete</a>
+                    {% if user.is_superuser %}
+                      | author: {{ o.author|linebreaksbr }}
+                    {% endif %}
+                    <a class="btn btn-success my-2 my-sm-0" href="{% url 'FinishToDoView' pk=o.pk %}">Complete</a>
+                    <a class="btn btn-secondary my-2 my-sm-0" href="{% url 'EditToDoView' pk=o.pk %}">Edit</a>
+                    <a class="btn btn-danger my-2 my-sm-0" href="{% url 'DeleteToDoView' pk=o.pk %}">Delete</a>
                     </li>
                 </ul>
             </form>
@@ -47,6 +50,9 @@
                     <ul>
                         <li>
                             {{o.title}}
+                            {% if user.is_superuser %}
+                               | author: {{ o.author|linebreaksbr }}
+                            {% endif %}
                              <a class="btn btn-danger my-2 my-sm-0" href="{% url 'DeleteToDoView' pk=o.pk %}">Delete</a>
                         </li>
                     </ul>

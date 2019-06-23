@@ -18,6 +18,9 @@
         </form>
         {% for post in posts %}
             <h1>Title: {{ post.title }}</h1>
+            {% if user.is_superuser %}
+                <p>author: {{ post.author|linebreaksbr }}</p>
+            {% endif %}
             <p>{{ post.text|linebreaksbr }}</p>
             <img class="img-thumbnail" style="width: 40%; height: 40%; object-fit: contain; "src="{{ post.cover.url}}" alt="{{ post.title }}">
             <a class="btn btn-success" href="{% url 'EditPostView' pk=post.pk %}">Edit</a>
